@@ -104,9 +104,10 @@ generate_messages(DEPENDENCIES geometry_msgs sensor_msgs std_msgs)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-INCLUDE_DIRS include
-CATKIN_DEPENDS cmake_modules eigen_conversions geometry_msgs message_runtime roscpp sensor_msgs std_msgs
-DEPENDS Eigen OpenCV PCL
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}_grasp_detector ${PROJECT_NAME}_grasp_plotter
+  CATKIN_DEPENDS cmake_modules eigen_conversions geometry_msgs message_runtime roscpp sensor_msgs std_msgs
+  DEPENDS Eigen OpenCV PCL
 )
 
 ###########
@@ -146,6 +147,8 @@ add_executable(${PROJECT_NAME}_test_conv_layer src/tests/test_conv_layer.cpp)
 add_executable(${PROJECT_NAME}_test_lenet src/tests/test_lenet.cpp)
 add_executable(${PROJECT_NAME}_test_service src/tests/test_service.cpp)
 
+add_dependencies(${PROJECT_NAME}_test_service ${catkin_EXPORTED_TARGETS})
+
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -153,128 +156,156 @@ add_executable(${PROJECT_NAME}_test_service src/tests/test_service.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_clustering
-                      ${GENERATOR_LIB})
+  ${GENERATOR_LIB}
+)
 
 target_link_libraries(${PROJECT_NAME}_create_grasp_images
-                      ${PROJECT_NAME}_learning
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES}
-                      ${PCL_LIBRARIES})
+  ${PROJECT_NAME}_learning
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_generate_candidates
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES}
-                      ${PCL_LIBRARIES})
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_classify_candidates
-                      ${PROJECT_NAME}_grasp_detector
-                      ${PROJECT_NAME}_sequential_importance_sampling
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES}
-                      ${PCL_LIBRARIES})
+  ${PROJECT_NAME}_grasp_detector
+  ${PROJECT_NAME}_sequential_importance_sampling
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_grasp_detector
-                      ${PROJECT_NAME}_clustering
-                      ${PROJECT_NAME}_learning
-                      ${PROJECT_NAME}_lenet
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES})
+  ${PROJECT_NAME}_clustering
+  ${PROJECT_NAME}_learning
+  ${PROJECT_NAME}_lenet
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+)
 
-target_link_libraries(${PROJECT_NAME}_grasp_plotter                      
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_grasp_plotter
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_grasp_image
-                      ${OpenCV_LIBRARIES})
+  ${OpenCV_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_grasp_image_15_channels
-                      ${PROJECT_NAME}_grasp_image)
+  ${PROJECT_NAME}_grasp_image
+)
 
 target_link_libraries(${PROJECT_NAME}_learning
-                      ${PROJECT_NAME}_grasp_image_15_channels
-                      ${GENERATOR_LIB})
+  ${PROJECT_NAME}_grasp_image_15_channels
+  ${GENERATOR_LIB}
+)
 
 target_link_libraries(${PROJECT_NAME}_detect_grasps
-                      ${PROJECT_NAME}_grasp_detector
-                      ${PROJECT_NAME}_grasp_plotter
-                      ${PROJECT_NAME}_sequential_importance_sampling
-                      ${GENERATOR_LIB}
-                      ${PCL_LIBRARIES})
+  ${PROJECT_NAME}_grasp_detector
+  ${PROJECT_NAME}_grasp_plotter
+  ${PROJECT_NAME}_sequential_importance_sampling
+  ${GENERATOR_LIB}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_detect_grasps_server
-                      ${PROJECT_NAME}_grasp_detector
-                      ${PROJECT_NAME}_grasp_plotter
-                      ${GENERATOR_LIB}
-                      ${PCL_LIBRARIES})
+  ${PROJECT_NAME}_grasp_detector
+  ${PROJECT_NAME}_grasp_plotter
+  ${GENERATOR_LIB}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_sequential_importance_sampling
-                      ${PROJECT_NAME}_grasp_detector)
+  ${PROJECT_NAME}_grasp_detector
+)
 
 target_link_libraries(${PROJECT_NAME}_test_occlusion
-                      ${PROJECT_NAME}_learning
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES}
-                      ${PCL_LIBRARIES})
+  ${PROJECT_NAME}_learning
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_test_grasp_image
-                      ${PROJECT_NAME}_learning
-                      ${PROJECT_NAME}_lenet
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES}
-                      ${PCL_LIBRARIES})
+  ${PROJECT_NAME}_learning
+  ${PROJECT_NAME}_lenet
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_test_conv_layer
-                      ${PROJECT_NAME}_conv_layer)
+  ${PROJECT_NAME}_conv_layer
+)
 
 target_link_libraries(${PROJECT_NAME}_lenet
-                      ${PROJECT_NAME}_conv_layer
-                      ${PROJECT_NAME}_dense_layer)
+  ${PROJECT_NAME}_conv_layer
+  ${PROJECT_NAME}_dense_layer
+)
 
 target_link_libraries(${PROJECT_NAME}_test_lenet
-                      ${PROJECT_NAME}_lenet)
+  ${PROJECT_NAME}_lenet
+)
 
 target_link_libraries(${PROJECT_NAME}_test_service
-                      ${catkin_LIBRARIES}
-                      ${PCL_LIBRARIES})
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 target_link_libraries(${PROJECT_NAME}_learning
-                      ${GENERATOR_LIB}
-                      ${catkin_LIBRARIES})
+  ${GENERATOR_LIB}
+  ${catkin_LIBRARIES}
+)
 
 
 # Rename targets to simplify their names.
 set_target_properties(${PROJECT_NAME}_detect_grasps
-                      PROPERTIES OUTPUT_NAME detect_grasps
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME detect_grasps
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_detect_grasps_server
-                      PROPERTIES OUTPUT_NAME detect_grasps_server
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME detect_grasps_server
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_classify_candidates
-                      PROPERTIES OUTPUT_NAME classify_candidates
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME classify_candidates
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_create_grasp_images
-                      PROPERTIES OUTPUT_NAME create_grasp_images
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME create_grasp_images
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_test_occlusion
-                      PROPERTIES OUTPUT_NAME test_occlusion
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME test_occlusion
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_test_grasp_image
-                      PROPERTIES OUTPUT_NAME test_grasp_image
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME test_grasp_image
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_test_conv_layer
-                      PROPERTIES OUTPUT_NAME test_conv_layer
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME test_conv_layer
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_test_lenet
-                      PROPERTIES OUTPUT_NAME test_lenet
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME test_lenet
+  PREFIX ""
+)
 
 set_target_properties(${PROJECT_NAME}_test_service
-                      PROPERTIES OUTPUT_NAME test_service
-                      PREFIX "")
+  PROPERTIES OUTPUT_NAME test_service
+  PREFIX ""
+)
