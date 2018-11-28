@@ -107,6 +107,9 @@ private:
   double hand_depth_;
   double finger_width_;
   double hand_height_;
+
+  visualization_msgs::MarkerArray markers_;
+
 };
 
 #endif /* GRASP_PLOTTER_H_ */
