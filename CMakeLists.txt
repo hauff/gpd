@@ -19,8 +19,8 @@ find_package(OpenCV)
 # custom messages
 find_package(message_generation)
 
-find_library(GENERATOR_LIB grasp_candidates_generator)
-find_path(GENERATOR_LIB_INCLUDE_DIR gpg/grasp.h)
+find_library(GENERATOR_LIB grasp_candidates_generator "/home/eitel/sources_non_catkin/gpg/build/")
+find_path(GENERATOR_LIB_INCLUDE_DIR gpg/grasp.h "/home/eitel/sources_non_catkin/gpg/build/include/")
 include_directories(${GENERATOR_LIB_INCLUDE_DIR})
 
 ## Set compiler optimization flags
